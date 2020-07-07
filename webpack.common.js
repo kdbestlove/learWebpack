@@ -4,11 +4,6 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
-const extractSass = new ExtractTextPlugin({
-    filename: "[name].css",
-    disable: process.env.NODE_ENV === "development"
-});
-
 module.exports = {
     entry: {
         main: './src/main.js',
@@ -46,8 +41,7 @@ module.exports = {
             _: 'lodash'
             // join: ['lodash', 'join']
         }),
-        // new ExtractTextPlugin("index.css"),
-        extractSass
+        new ExtractTextPlugin("[name].css"),
     ],
     output: {
         // filename: 'bundle.js',
@@ -82,39 +76,31 @@ module.exports = {
             exclude: /node_modules/
         },
         {
-            test: /\.css$/,
+            test: /\.(c|sc)ss$/,
             // use: [
             //     'style-loader',
             //     'css-loader'
             // ]
             use: ExtractTextPlugin.extract({
-                fallback: "style-loader",   // 这里表示不提取的时候，使用什么样的配置来处理css
-                use: "css-loader"           // 提取的时候，继续用下面的方式处理
+                fallback: "style-loader",                   // 这里表示不提取的时候，使用什么样的配置来处理css
+                use: ['css-loader','sass-loader'],           // 提取的时候，继续用下面的方式处理
             })
         },
-        {
-            test: /\.scss$/,
-            // use: [
-            //     {
-            //         loader: "style-loader"  // 将 JS 字符串生成为 style 节点
-            //     }, 
-            //     {
-            //         loader: "css-loader"    //  将 CSS 转化成 CommonJS 模块
-            //     }, 
-            //     {
-            //         loader: "sass-loader"   // 将 Sass 编译成 CSS
-            //     }
-            // ]
-            use: extractSass.extract({
-                use: [{
-                    loader: "css-loader"
-                }, {
-                    loader: "sass-loader"
-                }],
-                // 在开发环境使用 style-loader
-                fallback: "style-loader"
-            })
-        },
+        // {
+        //     test: /\.css$/,
+        //     use: ExtractTextPlugin.extract({
+        //         fallback: "style-loader",   // 这里表示不提取的时候，使用什么样的配置来处理css
+        //         use: "css-loader"           // 提取的时候，继续用下面的方式处理
+        //     })
+        // },
+        // {
+        //     test: /\.scss$/,
+        //     use: ExtractTextPlugin.extract({
+        //         use: ['css-loader','sass-loader'],
+        //         // 在开发环境使用 style-loader
+        //         fallback: "style-loader"
+        //     })
+        // },
         {
             test: /\.(png|svg|jpg|gif)$/,
             use: [
