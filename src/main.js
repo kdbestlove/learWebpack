@@ -1,4 +1,5 @@
-import './index.css';
+// import './index.css';
+import './index.scss';
 import * as api from './util/axios.js';
 
 let data = new URLSearchParams();
